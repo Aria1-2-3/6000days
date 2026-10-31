@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>6000D 月相观测电台</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="noise-bg"></div>
+
+    <div class="global-deco-layer">
+        <div class="star-blink s1">✦</div>
+        <div class="star-blink s2">✧</div>
+        <div class="star-blink s3">✦</div>
+        <div class="star-blink s4">✧</div>
+        <div class="star-blink s5">✦</div>
+        <div class="floating-obj boat">⛵</div>
+        <div class="dynamic-wave"></div>
+    </div>
+
+    <div id="particle-container"></div>
+
+    <!-- Phase 1: 倒计时页 -->
+    <section id="screen-countdown" class="screen active">
+        <div class="collage-card">
+            <div class="deco deco-window">
+                <svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="23" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M25 2 v46 M2 25 h46 M8 8 L42 42 M8 42 L42 8" stroke="currentColor" stroke-width="1"/></svg>
+            </div>
+            <div class="deco deco-moon floating">🌙</div>
+            <div class="stamp" style="top: 15px; left: -10px;">苏州 · 观测站</div>
+
+            <h1 class="mono-title">距离我们的 6000days</h1>
+            <p class="sub-text">还有</p>
+            <div id="countdown-timer" class="timer mono-text">
+                <span id="days">00</span>天 
+                <span id="hours">00</span>时 
+                <span id="minutes">00</span>分 
+                <span id="seconds">00</span>秒
+            </div>
+            <p id="countdown-text" class="waiting-text"></p>
+        </div>
+    </section>
+
+    <!-- Phase 2: 密码页 -->
+    <section id="screen-password" class="screen">
+        <div class="collage-card tilted">
+            <div class="deco deco-lighthouse">
+                <div class="light-beam"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21h6M12 21v-6M7 15h10l-2-4H9l-2 4zM9 11V4h6v7M10 4h4"/></svg>
+            </div>
+            <div class="stamp" style="bottom: 10px; right: -15px; transform: rotate(10deg);">舟山 · 接收端</div>
+
+            <h2 class="mono-title">请接入电台频率</h2>
+            <p class="hint">提示：月份 + 日期</p>
+            <input type="password" id="password-input" maxlength="4" placeholder="输入4位密码" autocomplete="off">
+            <button id="password-submit">接入</button>
+            <p id="password-error" class="error-msg"></p>
+        </div>
+    </section>
+
+    <!-- Phase 3: 电影级长动画页 -->
+    <section id="screen-intro" class="screen">
+        <img id="intro-gif" src="IMG_0960.GIF" alt="开屏动图" onerror="this.style.display='none';">
+        
+        <div id="intro-animation-container">
+            <div class="anim-node node-left">
+                <div class="node-dot"></div>
+                <div class="node-text mono-text">[苏州] 发射端<br>匹配成功</div>
+            </div>
+            <div class="anim-node node-right">
+                <div class="node-dot"></div>
+                <div class="node-text mono-text">[舟山] 接收端<br>校准成功</div>
+            </div>
+            <svg class="anim-line" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <path class="line-path" d="M 0 5 Q 25 15, 50 5 T 100 5" fill="none" stroke="var(--accent-color)" stroke-width="0.5" stroke-dasharray="200" stroke-dashoffset="200"/>
+            </svg>
+            <div class="anim-moon"></div>
+            <div class="anim-texts">
+                <p class="text-step t1 mono-text">连接距离：260 公里...</p>
+                <p class="text-step t2 mono-text">信号延迟：0.0009 秒。</p>
+                <p class="text-step t3 mono-title">第 6000 天，全频段接通。</p>
+            </div>
+        </div>
+        <button id="btn-enter-main" class="fade-in hidden-btn">进入导览页</button>
+    </section>
+
+    <!-- Phase 4: 主页面/导览页 -->
+    <section id="screen-main" class="screen">
+        <div id="radio-control" class="radio-icon">
+            <span class="status-dot"></span> ▶ 海盐电台
+        </div>
+        <audio id="bgm" src="bgm.mp3" loop></audio>
+        <div class="freq-grid" id="freq-grid"></div>
+        <div id="final-trigger-container" class="hidden">
+            <button id="btn-to-ending" class="pulse-btn">回到导览页 / 收听结尾</button>
+        </div>
+    </section>
+
+    <!-- 频段内容弹窗 -->
+    <div id="freq-modal" class="modal hidden">
+        <div class="modal-content" id="freq-modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- 拍立得放大查看层 -->
+    <div id="photo-viewer" class="hidden">
+        <div class="viewer-overlay" id="viewer-overlay"></div>
+        <div class="viewer-card" id="viewer-card">
+            <div class="viewer-front">
+                <img id="viewer-img" src="" alt="回忆">
+                <p id="viewer-caption"></p>
+                <span class="viewer-hint">点击反转</span>
+            </div>
+            <div class="viewer-back">
+                <p id="viewer-back-text"></p>
+                <span class="viewer-hint">点击返回</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 5: 结尾页 -->
+    <section id="screen-ending" class="screen">
+        <div class="collage-card">
+            <div class="deco deco-anchor floating">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="5" r="3"/><path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+            </div>
+            <div class="stamp" style="top: 20px; right: -20px;">6000D · 专属邮戳</div>
+            <h2 class="mono-title">6000D 电台结语</h2>
+            <div class="ending-content">
+                <p><strong>【总结】</strong>系统运行正常，无异常中断。</p>
+                <p><strong>【祝福】</strong>愿你接下来的每一天，都有好天气。</p>
+                <p><strong>【最后是声明】</strong>本电台不设终点，下版本 v7.0.0 (第7000天) 待发布。</p>
+            </div>
+            <div class="checkmarks">
+                <div class="check-item"><span class="check">✓</span> 6000天成就已达成</div>
+                <div class="check-item"><span class="check">✓</span> 双城信号已连接</div>
+                <div class="check-item"><span class="check">✓</span> 永不终止协议</div>
+            </div>
+            <p class="mono-text end-anim">— 信号永不断联 —</p>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
