@@ -1,5 +1,5 @@
 const DATA = {
-    targetDate: "2026-11-19T00:00:00+08:00", 
+    targetDate: "2026-10-19T00:00:00+08:00", 
     password: "0117", 
     countdownText: "何时葡萄先熟透，你要静候再静候。", 
     frequencies: [
